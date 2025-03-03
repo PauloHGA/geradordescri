@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Descrições para Instagram</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 600px; margin: auto; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; }
+        #description { margin-top: 20px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>Gerador de Descrições para Instagram</h1>
+    <form id="product-form">
+        <label for="name">Nome do produto:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="features">Características principais:</label>
+        <input type="text" id="features" name="features" required>
+        
+        <label for="benefits">Benefícios:</label>
+        <input type="text" id="benefits" name="benefits" required>
+        
+        <label for="target">Público-alvo:</label>
+        <input type="text" id="target" name="target" required>
+        
+        <button type="button" onclick="generateDescription()">Gerar Descrição</button>
+    </form>
+    <div id="description"></div>
+
+    <script>
+        function generateDescription() {
+            const formData = new FormData(document.getElementById('product-form'));
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            fetch('http://localhost:5000/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('description').innerText = data.description;
+            })
+            .catch(error => {
+                document.getElementById('description').innerText = 'Erro ao gerar descrição. Verifique a conexão.';
+            });
+        }
+    </script>
+</body>
+</html>
